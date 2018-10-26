@@ -1,0 +1,41 @@
+{
+  "name": "@ebay/userscript-proxy",
+  "description": "HTTP proxy to inject scripts and stylesheets into existing sites.",
+  "version": "1.0.0",
+  "main": "./lib/userscript-proxy.js",
+  "bin": {
+    "userscript-proxy": "./bin/userscript-proxy.js"
+  },
+  "license": "MIT",
+  "author": "Aaron Kleinsteiber",
+  "contributors": [
+    "Tony Topper <ttopper@gmail.com>",
+    "Sean Gates <sgates@ebay.com>"
+  ],
+  "keywords": [
+    "userscript",
+    "proxy"
+  ],
+  "dependencies": {
+    "express": "^4.16.3",
+    "http-mitm-proxy": "^0.6.1",
+    "minimist": "^1.2.0",
+    "node-forge": "^0.7.4",
+    "node-fqdn": "^1.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eBay/userscript-proxy.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "bugs": {
+    "url": "https://github.com/eBay/userscript-proxy/issues"
+  },
+  "homepage": "https://github.com/eBay/userscript-proxy#readme",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  }
+}

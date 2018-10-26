@@ -1,0 +1,339 @@
+<html>
+  <head>
+    <title>Select Userscript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script>
+      var platform = null;
+      if (/iPad|iPod|iPhone/.test(navigator.userAgent)) {
+        platform = 'ios';
+      } else if (/Android/.test(navigator.userAgent)) {
+        platform = 'android';
+      } else if (/Macintosh/.test(navigator.userAgent)) {
+        platform = 'mac';
+      } else if (/Windows NT 6/.test(navigator.userAgent)) {
+        platform = 'windows7';
+      } else if (/Windows NT 10/.test(navigator.userAgent)) {
+        platform = 'windows10';
+      }
+      
+      document.addEventListener("DOMContentLoaded", function(event) {
+        toggleDeviceSetup(platform);
+      });
+
+      function toggleDeviceSetup(device) {
+        var el = document.getElementById('device-setup-'+device);
+        if (el.className == 'device-setup-hide') {
+          el.className = '';
+        } else {
+          el.className = 'device-setup-hide';
+        }
+      };
+
+      function copyToClipboard(elementId) {
+        var element = document.getElementById(elementId);
+        var isContentEditable = element.contentEditable;
+        var isReadOnly = element.readOnly;
+        element.contenteditable = true;
+        element.readonly = false;
+        selectText(element);
+        element.contenteditable = isContentEditable;
+        element.readonly = isReadOnly;
+        document.execCommand('copy');
+        element.blur();
+      };
+      function selectText(element) {
+        if (platform == 'ios') {
+          var range = document.createRange();
+          range.selectNodeContents(element);
+          var selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          element.setSelectionRange(0, element.value.length);
+        } else {
+          element.select();
+        }
+      }
+      
+    </script>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        font-size: 18px;
+        margin: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      a {
+        text-decoration: none;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .configuration-files li {
+        padding: 16px;
+        margin: 0;
+        line-height: 1.4;
+      }
+      .configuration-files li:last-child {
+        border-bottom: 0;
+      }
+      .configuration-files .action {
+        background-color: #C5E5FB;
+        padding: 12px;
+        margin-top: 8px;
+        width: fit-content;
+      }
+      #http_proxy_url {
+        width: 100%;
+        font-size: 16px;
+        border: 0;
+        background: transparent;
+        text-overflow: ellipsis;
+      }
+      .device-setup-hide ul {
+        display: none;
+      }
+      .device-setup-heading {
+        cursor: pointer;
+        margin-bottom: 8px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-weight: 400;
+      }
+      .device-setup {
+        list-style-type: none;
+        margin-left: -16px;
+      }
+      .device-setup-heading:before {
+        display: inline-block;
+        content: '\25B8';
+        transform: rotate(90deg);
+        transition: transform 0.2s ease-in-out;
+        margin-right: 8px;
+      }
+      .device-setup-hide > .device-setup-heading:before {
+        transform: rotate(0deg);
+      }
+      .device-setup ul {
+        list-style-type: disc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Userscript Proxy</h1>
+    <h2>Select Userscript</h2>
+    <ul>
+      @@USERSCRIPT-PROXY-LIST@@
+    </ul>
+    <h2>Quick Start</h2>
+    <ol class="configuration-files">
+      <li>
+        Add Userscript Proxy's HTTP Proxy to your device settings
+        <div class="action">
+          <a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy Automatic HTTP Proxy URL to Clipboard</a><br><input id="http_proxy_url" type="text" readonly="true" onclick="selectText(this)" value="@@USERSCRIPT-PROXY-PAC-URL@@">
+        </div>
+      </li>
+      <li>
+        Install Userscript Proxy's CA Certificate
+        <div class="action">
+          <a href="@@USERSCRIPT-PROXY-CA-URL@@">Download CA Certificate</a>
+        </div>
+      </li>
+    </ol>
+    <h2>Detailed Instructions</h2>
+    <ul class="device-setup">
+      <li id="device-setup-android" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('android')">Android 7</div>
+        <ul>
+          <li><a href="@@USERSCRIPT-PROXY-CA-URL@@">Download the CA Certificate</a></li>
+          <li>Enter your device PIN, if applicable</li>
+          <li>Name the certificate, e.g. "Userscript Proxy CA" and tap "OK"</li>
+          <li><a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy the Automatic HTTP Proxy URL to the clipboard</a></li>
+          <li>Open the "Settings" app and open your Wi-Fi settings</li>
+          <li>Long press on the wireless network you're connected to, and tap "Manage network settings"</li>
+          <li>Tap "Show advanced options"</li>
+          <li>If there are any Proxy settings other than "None", make note of them so that you can re-enter them after you are done using this proxy</li>
+          <li>Under Proxy, select "Auto-config" and paste the HTTP Proxy URL into the "PAC web address" field</li>
+          <li>Tap "Save"</li>
+          <li>Quit and re-open the Chrome browser</li>
+        </ul>
+      </li>
+
+      <li id="device-setup-ios" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('ios')">iOS</div>
+        <ul>
+          <li><a href="@@USERSCRIPT-PROXY-CA-URL@@">Download the CA Certificate</a></li>
+          <li>Tap "Allow" to open Settings
+          <li>Tap "Install" and enter your device PIN, if applicable</li>
+          <li>You will see a warning. Userscript Proxy is self-signed, so this is expected. Tap "Install" again</li>
+          <li>Tap "Install" a third time</li>
+          <li>Tap "Done"</li>
+          <li>Open the "Settings" app and go to General > About > Certificate Trust Settings</li>
+          <li>Under "Enable full trust for root certificates", turn on trust for the NodeMITMProxyCA certificate and tap "Continue." Userscript Proxy needs to be able to intercept and alter your connection to websites to function</li>
+          <li><a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy the Automatic HTTP Proxy URL to the clipboard</a></li>
+          <li>Open the "Settings" app and go to "Wi-Fi"</li>
+          <li>Tap the i icon to the right of the currently selected Wi-Fi network</li>
+          <li>Under "HTTP Proxy", tap "Configure Proxy"</li>
+          <li>If there are any settings here other than "Off", make note of them so that you can re-enter them after you are done using this proxy</li>
+          <li>Tap "Automatic"</li>
+          <li>Paste the HTTP Proxy URL into the "URL" field and tap "Save"</li>
+          <li>Quit and re-open the Safari browser</li>
+        </ul>
+      </li>
+      <li id="device-setup-mac" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('mac')">Mac</div>
+        <ul>
+          <li><a href="@@USERSCRIPT-PROXY-CA-URL@@">Download the CA Certificate</a></li>
+          <li>Open the downloaded certificate file</li>
+          <li>Click "Add" to add the certificate to the login keychain</li>
+          <li>Search for "NodeMITMProxyCA" in the Keychain Access window that appears</li>
+          <li>Double-click the certificate in the search results list</li>
+          <li>Open the "Trust" dropdown</li>
+          <li>Under the "When using this certificate" dropdown, choose "Always Trust"</li>
+          <li>Close the window, enter your computer's password in the window that appears, and click "Update Settings"</li>
+          <li><a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy the Automatic HTTP Proxy URL to the clipboard</a></li>
+          <li>Open System Preferences</li>
+          <li>Click the "Network" preference pane</li>
+          <li>Click the currently-connected network interface in the list on the left side of the window</li>
+          <li>Click "Advanced..." in the lower-right corner</li>
+          <li>Click the "Proxies" tab</li>
+          <li>Make sure "Automatic Proxy Configuration" is checked</li>
+          <li>If there is a Proxy Configuration File URL already entered, save it so you can re-enter it after you are done using this proxy</li>
+          <li>Paste the HTTP Proxy URL from the proxy web page into the "URL" field</li>
+          <li>Click "OK"</li>
+          <li>Click "Apply"</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+      <li id="device-setup-windows7" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('windows7')">Windows 7</div>
+        <ul>
+          <li><a href="@@USERSCRIPT-PROXY-CA-URL@@">Download the CA Certificate</a></li>
+          <li>Open the downloaded certificate file. Click "Open" if you get a security warning</li>
+          <li>Click "Install Certificate..."</li>
+          <li>Click "Next" in the Certificate Import Wizard</li>
+          <li>Click "Place all certificates in the following store", and click "Browse..."</li>
+          <li>Select "Trusted Root Certification Authorities" and click "OK"</li>
+          <li>Click "Next"</li>
+          <li>Click "Finish", then "Yes", then "OK"</li>
+          <li><a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy the Automatic HTTP Proxy URL to the clipboard</a></li>
+          <li>Open the Start menu and click "Control Panel"</li>
+          <li>Search for "proxy"</li>
+          <li>Click "Configure proxy server"</li>
+          <li>Click "LAN settings"</li>
+          <li>Make sure the "Use automatic configuration script" checkbox is enabled</li>
+          <li>If there is a script address already entered, save it so you can re-enter it after you are done using this proxy</li>
+          <li>Paste the HTTP Proxy URL from the proxy web page into the "Address" field</li>
+          <li>Click "OK"</li>
+          <li>Click "OK"</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+      <li id="device-setup-windows10" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('windows10')">Windows 10</div>
+        <ul>
+          <li><a href="@@USERSCRIPT-PROXY-CA-URL@@">Download the CA Certificate</a></li>
+          <li>Open the downloaded certificate file</li>
+          <li>Click "Install Certificate..."</li>
+          <li>Click "Next" in the Certificate Import Wizard</li>
+          <li>Click "Place all certificates in the following store", and click "Browse..."</li>
+          <li>Select "Trusted Root Certification Authorities" and click "OK"</li>
+          <li>Click "Next"</li>
+          <li>Click "Finish", then "Yes", then "OK"</li>
+          <li><a href="@@USERSCRIPT-PROXY-PAC-URL@@" onclick="copyToClipboard('http_proxy_url'); return false;">Copy the Automatic HTTP Proxy URL to the clipboard</a></li>
+          <li>Open the Start menu and click "Settings"</li>
+          <li>Click "Network &amp; Internet"</li>
+          <li>Click "Proxy"</li>
+          <li>Make sure the "Use setup script" toggle is enabled</li>
+          <li>If there is a script address already entered, save it so you can re-enter it after you are done using this proxy</li>
+          <li>Paste the HTTP Proxy URL from the proxy web page into the "Script address" field</li>
+          <li>Click "Save"</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+    </ul>
+    <h2>Removal Instructions</h2>
+    <ul class="device-setup">
+      <li id="device-setup-remove-android" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('remove-android')">Android 7</div>
+        <ul>
+          <li>Open the "Settings" app and search for "User certificates"</li>
+          <li>Tap "Userscript Proxy CA" (or whatever you named it when you installed it)</li>
+          <li>Tap "Remove"</li>
+          <li>Go back to Settings Home and open your Wi-Fi settings</li>
+          <li>Long press on the wireless network you're connected to, and tap "Manage network settings"</li>
+          <li>Under "Show advanced options", change "Proxy Auto-config" to either "None" or any other settings that you saved when you set up the proxy</li>
+          <li>Tap "Save"</li>
+        </ul>
+      </li>
+
+      <li id="device-setup-remove-ios" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('remove-ios')">iOS</div>
+        <ul>
+          <li>Open the "Settings" app and tap "General", then "Profiles"</li>
+          <li>Tap "NodeMITMProxyCA"</li>
+          <li>Tap "Remove Profile"</li>
+          <li>If prompted, enter your device PIN, then tap "Remove"</li>
+          <li>Go back to the main screen of the Settings app and tap "Wi-Fi"</li>
+          <li>Tap the i icon to the right of the currently selected Wi-Fi network</li>
+          <li>Under "HTTP Proxy", tap "Configure Proxy"</li>
+          <li>Change this to either "Off" or any other settings that you saved when you set up the proxy, then tap "Save"</li>
+        </ul>
+      </li>
+      <li id="device-setup-remove-mac" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('remove-mac')">Mac</div>
+        <ul>
+          <li>Open the Keychain Access app (in /Applications/Utilities)</li>
+          <li>Search for "NodeMITMProxyCA" in the Keychain Access window that appears</li>
+          <li>Click the certificate in the search results list</li>
+          <li>Press the "Delete" key</li>
+          <li>Click the "Delete" button, enter your computer's password in the window that appears, and click "Update Settings"</li>
+          <li>Open System Preferences</li>
+          <li>Click the "Network" preference pane</li>
+          <li>Click the currently-connected network interface in the list on the left side of the window</li>
+          <li>Click "Advanced..." in the lower-right corner</li>
+          <li>Click the "Proxies" tab</li>
+          <li>Uncheck "Automatic Proxy Configuration"</li>
+          <li>If there was a Proxy Configuration File URL already selected before you set up this proxy, leave the box checked, click "Automatic Proxy Configuration", and replace the URL with the one you saved when you set up this proxy</li>
+          <li>Click "OK"</li>
+          <li>Click "Apply"</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+      <li id="device-setup-remove-windows7" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('remove-windows7')">Windows 7</div>
+        <ul>
+          <li>Open the Start menu, type "mmc", then press Enter</li>
+          <li>Click "Yes" if prompted about letting Microsoft Management Console make changes to your computer</li>
+          <li>In the "File" menu, select "Add/Remove Snap-in..."</li>
+          <li>Double-click "Certificates", select "My user account", then click "Finish"</li>
+          <li>Click "OK"</li>
+          <li>In the list on the left, double-click "Certificates", then "Trusted Root Certification Authorities", then "Certificates"</li>
+          <li>Click "NodeMITMProxyCA" and click the Delete button (red X) in the toolbar at the top of the window</li>
+          <li>Click "Yes", then "Yes"</li>
+          <li>Open the Start menu and click "Control Panel"</li>
+          <li>Search for "proxy"</li>
+          <li>Click "Configure proxy server"</li>
+          <li>Click "LAN settings"</li>
+          <li>Turn off the checkbox for "Use automatic configuration script"</li>
+          <li>If there was an automatic configuration script already selected before you set up this proxy, leave the checkbox enabled and replace the URL with the one you saved when you set up this proxy</li>
+          <li>Click "OK"</li>
+          <li>Click "OK"</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+      <li id="device-setup-remove-windows10" class="device-setup-hide"><div class="device-setup-heading" onclick="toggleDeviceSetup('remove-windows10')">Windows 10</div>
+        <ul>
+          <li>Open the Start menu and click "Settings"</li>
+          <li>Search for "Manage user certificates" and click it in the search results list</li>
+          <li>Double click "Trusted Root Certification Authorities", then "Certificates" in the list on the left</li>
+          <li>Click "NodeMITMProxyCA" and click the Delete button (red X) in the toolbar at the top of the window</li>
+          <li>Click "Yes", then "Yes"</li>
+          <li>Open the Start menu and click "Settings"</li>
+          <li>Click "Network &amp; Internet"</li>
+          <li>Click "Proxy"</li>
+          <li>Turn off the toggle for "Use setup script"</li>
+          <li>If there was a setup script already selected before you set up this proxy, leave the toggle enabled and replace the URL with the one you saved when you set up this proxy</li>
+          <li>Quit and re-open your web browser</li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "userscripts": [
+    {
+      "title": "Alter background color",
+      "id": "alterBackground",
+      "match": [
+        {"host": "ebay.com", "url": "/"},
+        {"host": "www.ebay.com", "url": "/"}
+      ],
+      "scripts": [
+        "./scripts/background.js"
+      ],
+      "styles": [
+        "./styles/background.css"
+      ]
+    },
+    {
+      "title": "Alter Google",
+      "id": "googleResults",
+      "match": [
+        {"host": "www.google.com", "url": "/"}
+      ],
+      "scripts": [
+        "./scripts/google.js"
+      ],
+      "styles": [
+        "./styles/google.css"
+      ]
+    }
+  ],
+  "userscriptSets": [
+    {
+      "title": "Alter Google results and eBay background color",
+      "id": "searchResultsBackground",
+      "password": "pass",
+      "userscripts": ["alterBackground","googleResults"]
+    },
+    {
+      "title": "Alter Google results",
+      "id": "searchResults",
+      "password": "pass",
+      "userscripts": ["googleResults"]
+    }
+  ]
+}

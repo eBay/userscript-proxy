@@ -1,0 +1,5 @@
+/* This example changes the background color of eBay's home page to red */
+html > body {
+  background-color: red!important;
+  background-image: none!important;
+}
