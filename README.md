@@ -1,5 +1,7 @@
 # Userscript Proxy
 
+[![Join the chat at https://gitter.im/eBay/userscript-proxy](https://badges.gitter.im/eBay/userscript-proxy.svg)](https://gitter.im/eBay/userscript-proxy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Ever tried to run userscripts on your iOS device or your Android phone? For iOS, it's not possible, and for Android it's an exercise in frustration.
 
 Userscript Proxy allows you to run userscripts on mobile devices. Userscripts are snippets of JavaScript and CSS code that are added to a particular web page, to change the way it looks or the way it behaves. [Tampermonkey](https://tampermonkey.net) and [Greasemonkey](http://www.greasespot.net) are browser extensions that allow you to install userscripts into web pages, but they only work properly in desktop browsers &ndash; they don't support iOS at all, and the version for Android is tied to an old browser that doesn't work very well anymore.
